@@ -1,0 +1,120 @@
+{
+  "Data Scientist": {
+    "required_skills": [
+      "python",
+      "pandas",
+      "numpy",
+      "scikit-learn",
+      "statistical analysis",
+      "data visualization",
+      "sql"
+    ],
+    "nice_to_have": [
+      "tensorflow",
+      "pytorch",
+      "machine learning",
+      "deep learning"
+    ]
+  },
+  "ML Engineer": {
+    "required_skills": [
+      "python",
+      "machine learning",
+      "deep learning",
+      "tensorflow",
+      "pytorch",
+      "scikit-learn",
+      "sql"
+    ],
+    "nice_to_have": [
+      "nlp",
+      "computer vision",
+      "docker",
+      "kubernetes"
+    ]
+  },
+  "Backend Developer": {
+    "required_skills": [
+      "python",
+      "java",
+      "c#",
+      "rest api",
+      "sql",
+      "databases",
+      "linux"
+    ],
+    "nice_to_have": [
+      "node.js",
+      "docker",
+      "ci/cd",
+      "aws",
+      "azure"
+    ]
+  },
+  "Frontend Developer": {
+    "required_skills": [
+      "javascript",
+      "html",
+      "css",
+      "react",
+      "angular",
+      "vue",
+      "rest api"
+    ],
+    "nice_to_have": [
+      "typescript",
+      "webpack",
+      "git",
+      "responsive design"
+    ]
+  },
+  "Data Analyst": {
+    "required_skills": [
+      "sql",
+      "excel",
+      "data visualization",
+      "statistical analysis",
+      "python",
+      "pandas"
+    ],
+    "nice_to_have": [
+      "tableau",
+      "power bi",
+      "business intelligence"
+    ]
+  },
+  "DevOps Engineer": {
+    "required_skills": [
+      "docker",
+      "kubernetes",
+      "linux",
+      "ci/cd",
+      "aws",
+      "terraform",
+      "git"
+    ],
+    "nice_to_have": [
+      "azure",
+      "gcp",
+      "ansible",
+      "monitoring"
+    ]
+  },
+  "AI Engineer": {
+    "required_skills": [
+      "python",
+      "nlp",
+      "deep learning",
+      "transformer models",
+      "bert",
+      "machine learning"
+    ],
+    "nice_to_have": [
+      "computer vision",
+      "reinforcement learning",
+      "gpt",
+      "pytorch",
+      "tensorflow"
+    ]
+  }
+}
