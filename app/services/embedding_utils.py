@@ -8,24 +8,19 @@ import logging
 from typing import Union, List
 import hashlib
 
-try:
-    from sentence_transformers import SentenceTransformer
-    HAS_SENTENCE_TRANSFORMERS = True
-except ImportError:
-    HAS_SENTENCE_TRANSFORMERS = False
-
 logger = logging.getLogger(__name__)
 
 
 class EmbeddingModel:
     """
-    Wrapper for sentence-transformers model with caching.
+    Wrapper for sentence-transformers model with lazy loading and caching.
     Generates embeddings and normalizes vectors for FAISS.
+    Loads model only when first needed to optimize memory usage.
     """
     
-    def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
+    def __init__(self, model_name: str = "paraphrase-MiniLM-L3-v2"):
         """
-        Initialize embedding model.
+        Initialize embedding model (lazy loading).
         
         Args:
             model_name (str): HuggingFace model identifier
@@ -34,18 +29,30 @@ class EmbeddingModel:
         self.model = None
         self.embedding_cache = {}
         self.embedding_dim = None
+        self._model_loaded = False
+    
+    def _get_model(self):
+        """
+        Lazily load the SentenceTransformer model on first use.
+        Imports are done here to defer memory allocation until needed.
+        """
+        if self._model_loaded:
+            return self.model
         
-        if HAS_SENTENCE_TRANSFORMERS:
-            try:
-                self.model = SentenceTransformer(model_name)
-                # Get embedding dimension from model config
-                self.embedding_dim = self.model.get_sentence_embedding_dimension()
-                logger.info(f"✓ Loaded embedding model: {model_name} (dim: {self.embedding_dim})")
-            except Exception as e:
-                logger.error(f"✗ Error loading embedding model: {str(e)}")
-                self.model = None
-        else:
+        try:
+            from sentence_transformers import SentenceTransformer
+            
+            self.model = SentenceTransformer(self.model_name)
+            self.embedding_dim = self.model.get_sentence_embedding_dimension()
+            self._model_loaded = True
+            logger.info(f"✓ Loaded embedding model: {self.model_name} (dim: {self.embedding_dim})")
+            return self.model
+        except ImportError:
             logger.error("✗ sentence-transformers not installed. Install with: pip install sentence-transformers")
+            raise RuntimeError("sentence-transformers is required but not installed")
+        except Exception as e:
+            logger.error(f"✗ Error loading embedding model: {str(e)}")
+            raise RuntimeError(f"Failed to load embedding model: {str(e)}")
     
     def encode(self, text: Union[str, List[str]], normalize: bool = True) -> np.ndarray:
         """
@@ -58,8 +65,7 @@ class EmbeddingModel:
         Returns:
             np.ndarray: Embedding vector(s) of shape (dim,) or (n, dim)
         """
-        if not self.model:
-            raise RuntimeError("Embedding model not loaded. Check installation.")
+        model = self._get_model()
         
         # Handle single string input
         if isinstance(text, str):
@@ -84,7 +90,7 @@ class EmbeddingModel:
         
         # Encode uncached texts
         if texts_to_encode:
-            new_embeddings = self.model.encode(texts_to_encode, convert_to_numpy=True)
+            new_embeddings = model.encode(texts_to_encode, convert_to_numpy=True)
             if new_embeddings.ndim == 1:  # Single embedding
                 new_embeddings = new_embeddings.reshape(1, -1)
             
