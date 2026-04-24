@@ -1,11 +1,12 @@
+torch==2.2.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
+
 fastapi
 uvicorn[standard]
-python-multipart
-pydantic
-scikit-learn
-pandas
-numpy
-PyMuPDF>=1.24.0
 sentence-transformers
 faiss-cpu
 google-generativeai
+python-dotenv
+
+numpy
+scikit-learn
+pymupdf
